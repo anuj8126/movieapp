@@ -1,34 +1,49 @@
 import React ,{ useState, useEffect } from 'react';
 import {Link} from 'react-router-dom';
 import 'antd/dist/antd.css';
-import { Input, Space,Row,Col,Card,Switch  } from 'antd';
+import { Input, Space,Row,Col,Card,Switch,AutoComplete} from 'antd';
 import {ThemeProvider} from "styled-components";
-import { GlobalStyles } from "./GlobalStyles";
-import { lightTheme, darkTheme } from "./Themes"
+import { GlobalStyles,NavBar } from "./GlobalStyles";
+import { lightTheme, darkTheme } from "./Themes";
+import {useHistory} from 'react-router-dom';
 function Home(){
   const { Search } = Input;
   const { Meta } = Card;
   const [searchValue,setsearchValue] = useState(null);
   const [searchResultData,setsearchResultData] = useState([]);
-  const [theme, setTheme] = useState(false);
+  const [cardData,setcardData] = useState([]);
+  const [theme, setTheme] = useState(true);
+  const [options, setOptions] = useState([]);
   const themeToggler = () => {
     theme === false ? setTheme('dark') : setTheme('light')
 }
-  
+const history = useHistory();
   const onSearch = value => {
-    console.log(value);
-    setsearchValue(value);
+    setcardData(searchResultData);
   }
   useEffect(() => {
     if(searchValue){
       fetch(`http://www.omdbapi.com/?s=${searchValue}&apikey=64769f03`)
       .then(response => response.json())
-      .then(data =>{console.log(data);setsearchResultData(data.Search)});
+      .then(data =>{
+        if(data.Response == "True"){
+          setsearchResultData(data.Search)
+          const optionvalue = data.Search.map(d=>{
+          return {value: d.imdbID , label:d.Title , id: d.imdbID}
+          });
+        setOptions(optionvalue);
+        }
+        
+      
+      });
     }
     
   }, [searchValue])
+ function onSelect(value){
+  history.push(`/details/${value}/${theme}`);   
+ }
  const funconCardClick = (e)=>{
-    localStorage.setItem("selectedCard", e.target.alt); 
+ 
  }
  function onChange(checked) {
   setTheme(checked);
@@ -37,24 +52,33 @@ function Home(){
       <ThemeProvider theme={theme === false ? lightTheme : darkTheme}>
       <> 
       <GlobalStyles/>
-      <div className="navBar">
+      <NavBar>
       <Row>
-      <Col span={12} offset={6}>
-      <Search placeholder="input search text" onSearch={onSearch} enterButton style={{marginTop:'2vh'}} />
+       
+      <Col xs={12} sm={12} md={12} lg={12} xl={12} offset={6}>
+      <AutoComplete
+      options={options}
+      className="inputClass"
+      onSelect={onSelect}
+     
+      >
+      <Search placeholder="Find My Movies" onSearch={onSearch} onChange={e=>setsearchValue(e.target.value)}  enterButton style={{marginTop:'2vh'}} />
+      </AutoComplete>
       </Col>
       <Col style={{margin:'2vh'}}>
-      <Switch checkedChildren="Dark" unCheckedChildren="Light"   onChange={onChange} />
+      <Switch checkedChildren="Dark" defaultChecked unCheckedChildren="Light"   onChange={onChange} />
       </Col>
+      
       </Row>     
-      </div> 
+      </NavBar> 
 
       <div className="cardDivison">
-      <Row>
-        {searchResultData.length>0 && searchResultData.map(value=>{
+      <Row gutter={[16, 16]}>
+        {cardData.length>0 && cardData.map(value=>{
           {console.log(value)}
           return(
-            <Col span={6} style={{marginBottom:'5vh'}}>
-              <Link to="/detail">
+            <Col style={{marginBottom:'5vh'}} xs={24} sm={24} md={6} lg={6} xl={6}>
+              <Link to={`/details/${value.imdbID}/${theme}`}>
             <Card
             hoverable
             style={{ width: 240 }}

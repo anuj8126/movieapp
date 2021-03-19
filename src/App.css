@@ -1,79 +1,25 @@
-.navBar {
-  position: sticky;
-  width: 100vw;
-  height: 8vh;
-  background-color: #FFFFFF;
-  box-shadow: 0px 1px 10px #999;
-}
-
-
 .cardDivison{
   position: relative;
-    top: 12vh;
-    left: 2vw;
+  top: 12vh;
+  left: 2vw;
 }
-
-.float-layout {
-  padding: 5px 5px;
-  float: left;
-  width: 60%;
-  height: auto;
-  box-sizing: border-box;
-  margin: 0;
+.formClass>div>label{
+  color:#1890ff;
 }
-
-.card-container {
-  overflow: hidden;
-  margin-top: 3vh;
+.ant-input[disabled] {
+  color: #1890ff;
 }
-
-.card {
-  background-color: #181818;
-  color: white;
-  min-height: 100%;
-  width: 50%;
-  float: right;
-
-}
-
-.card-title {
-  font-size: 30px;
-  text-align: center;
-  font-weight: bold;
-  padding-top: 20px;
-}
-
-.card-desc {
-  padding: 10px;
-  text-align: left;
-  font-size: 18px;
-}
-
-
-.card-image {
-  display: flex;
-}
-
-
-div.card-image img {
-  width: 50%;
-  height: auto;
-}
-
 /* Phone Devices Query */
 @media only screen and (max-width: 37.5em) {
-  div.card-image img {
-    width: 100%;
-    height: auto;
-  }
-
-  .card-image {
-     flex-direction: column;
-  }
-
-
-  .card {
-    width: 100%;
-    margin-top: -4px;
+  
+  .cardDivison{
+    left: 10vh;
   }
 }
+.inputClass {
+  width:100%;
+}
+
+.Carddetails > .ant-card-body{
+  padding: 0% !important;
+ }
